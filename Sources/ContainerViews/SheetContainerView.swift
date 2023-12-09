@@ -16,6 +16,8 @@ public struct SheetContainerView<Content: View>: View {
     private var cancellationAction: (() -> Void)?
     private var confirmationTitle: LocalizedStringKey?
     private var confirmationAction: (() -> Void)?
+    private var cancellationDisabled: Bool = false
+    private var confirmationDisabled: Bool = false
     
     /// Initializes a new `SheetContainerView` with the specified content.
     ///
@@ -32,12 +34,14 @@ public struct SheetContainerView<Content: View>: View {
                 if let cancellationTitle, let cancellationAction {
                     ToolbarItem(placement: .cancellationAction) {
                         Button(cancellationTitle, action: cancellationAction)
+                            .disabled(cancellationDisabled)
                     }
                 }
                 
                 if let confirmationTitle, let confirmationAction {
                     ToolbarItem(placement: .confirmationAction) {
                         Button(confirmationTitle, action: confirmationAction)
+                            .disabled(confirmationDisabled)
                     }
                 }
             }
@@ -59,6 +63,19 @@ public struct SheetContainerView<Content: View>: View {
         return view
     }
     
+    /// Disables the cancellation action in the sheet.
+    ///
+    /// This method allows you to enable or disable the cancellation button in the `SheetContainerView`. When set to `true`, the cancellation button becomes unresponsive to user interactions.
+    ///
+    /// - Parameter disabled: A Boolean value that determines whether the cancellation button is disabled.
+    /// - Returns: An updated `SheetContainerView` with the modified cancellation button state.
+    public func cancellationDisabled(_ disabled: Bool) -> SheetContainerView {
+        var view = self
+        view.cancellationDisabled = disabled
+        
+        return view
+    }
+    
     /// Adds a confirmation action to the sheet.
     ///
     /// This method configures a confirmation button with a title and an action. The button is displayed in the sheet's toolbar and performs the specified action when tapped.
@@ -71,6 +88,19 @@ public struct SheetContainerView<Content: View>: View {
         var view = self
         view.confirmationTitle = title
         view.confirmationAction = action
+        
+        return view
+    }
+    
+    /// Disables the confirmation action in the sheet.
+    ///
+    /// This method enables or disables the confirmation button in the `SheetContainerView`. When set to `true`, the confirmation button is disabled and unresponsive to user interactions.
+    ///
+    /// - Parameter disabled: A Boolean value that indicates whether the confirmation button is disabled.
+    /// - Returns: An updated `SheetContainerView` with the modified confirmation button state.
+    public func confirmationDisabled(_ disabled: Bool) -> SheetContainerView {
+        var view = self
+        view.confirmationDisabled = disabled
         
         return view
     }
